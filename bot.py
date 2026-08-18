@@ -19,6 +19,7 @@
 
 import sys as _sys
 import os as _os
+import re
 
 _IS_USERBOT = "--userbot" in _sys.argv or _os.environ.get("USERBOT_MODE") == "1"
 
