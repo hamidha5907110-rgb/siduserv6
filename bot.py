@@ -6598,37 +6598,57 @@ else:
 
         keyboard = [
             [
-                InlineKeyboardButton("🚀  𝗛𝗼𝘀𝘁 𝗠𝘆 𝗨𝘀𝗲𝗿𝗯𝗼𝘁", callback_data="host"),
-                InlineKeyboardButton("📋  𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀",        callback_data="commands"),
+                InlineKeyboardButton("🚀  𝗛𝗼𝘀𝘁 𝗠𝘆 𝗨𝘀𝗲𝗿𝗯𝗼𝘁  ✦", callback_data="host"),
+                InlineKeyboardButton("📚  𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀  ✦",        callback_data="commands"),
             ],
             [
-                InlineKeyboardButton("📊  𝗦𝘁𝗮𝘁𝘂𝘀",   callback_data="status"),
-                InlineKeyboardButton("🗑️  𝗟𝗼𝗴𝗼𝘂𝘁",   callback_data="menu_logout"),
+                InlineKeyboardButton("📊  𝗟𝗶𝘃𝗲 𝗦𝘁𝗮𝘁𝘂𝘀  ✦",   callback_data="status"),
+                InlineKeyboardButton("🗑️  𝗔𝗰𝗰𝗼𝘂𝗻𝘁𝘀  ✦",   callback_data="menu_logout"),
             ],
             [
-                InlineKeyboardButton("📞  𝗦𝘂𝗽𝗽𝗼𝗿𝘁",          callback_data="support"),
-                InlineKeyboardButton("❓  𝗛𝗲𝗹𝗽 & 𝗚𝘂𝗶𝗱𝗲", callback_data="help"),
+                InlineKeyboardButton("📞  𝗦𝘂𝗽𝗽𝗼𝗿𝘁  ✦",          callback_data="support"),
+                InlineKeyboardButton("💡  𝗛𝗲𝗹𝗽 & 𝗚𝘂𝗶𝗱𝗲  ✦", callback_data="help"),
             ],
         ]
         if is_owner(uid):
             keyboard.append([
-                InlineKeyboardButton("📢  𝗕𝗿𝗼𝗮𝗱𝗰𝗮𝘀𝘁", callback_data="broadcast_menu"),
-                InlineKeyboardButton("🔐  𝗔𝗣𝗜 𝗦𝗲𝘁𝘁𝗶𝗻𝗴𝘀", callback_data="api_settings"),
+                InlineKeyboardButton("📢  𝗕𝗿𝗼𝗮𝗱𝗰𝗮𝘀𝘁  ✦", callback_data="broadcast_menu"),
+                InlineKeyboardButton("🔐  𝗔𝗣𝗜 𝗦𝗲𝘁𝘁𝗶𝗻𝗴𝘀  ✦", callback_data="api_settings"),
             ])
 
+        # ── Premium welcome composition ──────────────────────────────────────────
+        # Kept as the same menu/actions, but presented as a cleaner dashboard.
+        live_state = (
+            f"🟢 {sans_bold('ONLINE')}  •  {mono(str(len(running)))} running"
+            if hosted else
+            f"⚪ {sans_bold('READY')}  •  {italic_serif('No userbot hosted yet')}"
+        )
+        api_state = (
+            f"🔐 {sans_bold('API')}  •  {script('Configured')}"
+            if _api_ready() else
+            f"🔐 {sans_bold('API')}  •  {script('Setup required')}"
+        )
+
         text = (
-            f"{TOP}\n"
-            f"║  🤖  {double_struck('SID Premium Hoster')}  🤖  ║\n"
-            f"{BOT}\n\n"
-            f"🌟 {script('Welcome back')}, {bold_serif(name)}!\n\n"
+            "╭──────────────────────────────╮\n"
+            f"│   ✦  {double_struck('SID PREMIUM HOSTER')}  ✦   │\n"
+            "├──────────────────────────────┤\n"
+            f"│  👋 {bold_serif('Welcome')}, {bold_serif(name)}\n"
+            f"│  ⚡ {sans_bold('Advance V6')}   •   🚀 {script('Fast & Secure')}\n"
+            "╰──────────────────────────────╯\n\n"
             f"{DIV}\n"
-            f"⚡ {sans_bold('Version')}  : {mono('Advance V6')}\n"
-            f"📦 {sans_bold('Commands')} : {mono('500+')}\n"
-            f"⚔️ {sans_bold('Raids')}    : {mono('20 Types  1000+ Texts')}\n"
+            f"🧩 {bold_serif('CONTROL CENTER')}\n"
             f"{DIV}\n"
-            f"🪪 {fraktur('Your ID')} : `{uid}`"
+            f"{live_state}\n"
+            f"{api_state}\n"
+            f"📦 {sans_bold('Features')}  •  {mono('500+ Commands')}\n"
+            f"⚔️ {sans_bold('Engine')}    •  {mono('20 Modes')}  •  {mono('1000+ Texts')}\n"
+            f"🪪 {fraktur('Your ID')} • `{uid}`\n"
             f"{status_line}\n\n"
-            f"{italic_serif('Select an option below')} 👇"
+            "╭──────────────────────────────╮\n"
+            f"│  ✨ {sans_bold('Choose your next action')}   │\n"
+            f"│  {italic_serif('Fast access • Smooth control • Live status')} │\n"
+            "╰──────────────────────────────╯"
         )
 
         # Check for welcome video
@@ -6660,11 +6680,38 @@ else:
                     reply_markup=InlineKeyboardMarkup(keyboard),
                 )
         else:
-            await update.message.reply_text(
-                text,
+            # Animated entrance: short boot sequence, then morph into the full dashboard.
+            intro = await update.message.reply_text(
+                f"╭──────────────────────────────╮\n"
+                f"│  ✦  {double_struck('SID PREMIUM HOSTER')}  ✦  │\n"
+                f"╰──────────────────────────────╯\n\n"
+                f"⏳ {sans_bold('Initializing secure control panel')}...",
                 parse_mode=ParseMode.MARKDOWN,
-                reply_markup=InlineKeyboardMarkup(keyboard),
             )
+            await animate_text(
+                intro,
+                [
+                    f"╭──────────────────────────────╮\n│  ✦  {double_struck('SID PREMIUM HOSTER')}  ✦  │\n╰──────────────────────────────╯\n\n⚡ {sans_bold('Loading')} · `▱▱▱▱▱`",
+                    f"╭──────────────────────────────╮\n│  ✦  {double_struck('SID PREMIUM HOSTER')}  ✦  │\n╰──────────────────────────────╯\n\n⚡ {sans_bold('Loading')} · `▰▱▱▱▱`",
+                    f"╭──────────────────────────────╮\n│  ✦  {double_struck('SID PREMIUM HOSTER')}  ✦  │\n╰──────────────────────────────╯\n\n⚡ {sans_bold('Loading')} · `▰▰▰▱▱`",
+                    f"╭──────────────────────────────╮\n│  ✦  {double_struck('SID PREMIUM HOSTER')}  ✦  │\n╰──────────────────────────────╯\n\n⚡ {sans_bold('Loading')} · `▰▰▰▰▱`",
+                    f"╭──────────────────────────────╮\n│  ✦  {double_struck('SID PREMIUM HOSTER')}  ✦  │\n╰──────────────────────────────╯\n\n✅ {sans_bold('Control panel ready')} · `▰▰▰▰▰`",
+                ],
+                delay=0.10,
+            )
+            await asyncio.sleep(0.18)
+            try:
+                await intro.edit_text(
+                    text,
+                    parse_mode=ParseMode.MARKDOWN,
+                    reply_markup=InlineKeyboardMarkup(keyboard),
+                )
+            except Exception:
+                await update.message.reply_text(
+                    text,
+                    parse_mode=ParseMode.MARKDOWN,
+                    reply_markup=InlineKeyboardMarkup(keyboard),
+                )
 
 
     # ════════════════════════════════════════════════════════════════════════════════
@@ -7967,7 +8014,20 @@ else:
             footer = ""
             if any(not runner.is_running(uid, a["slot"]) for a in hosted):
                 footer = f"\n\n🔄 {italic_serif('/restart se revive karo.')}"
-            await query.message.reply_text(
+            status_msg = await query.message.reply_text(
+                f"📡 {bold_serif('Syncing live status')} · `▱▱▱`",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+            await animate_text(
+                status_msg,
+                [
+                    f"📡 {bold_serif('Syncing live status')} · `▰▱▱`",
+                    f"📡 {bold_serif('Syncing live status')} · `▰▰▱`",
+                    f"📡 {bold_serif('Syncing live status')} · `▰▰▰`",
+                ],
+                delay=0.09,
+            )
+            await status_msg.edit_text(
                 f"{TOP}\n║  📊  {double_struck('Userbot Status')}  📊  ║\n{BOT}\n\n"
                 + "\n\n".join(lines) +
                 f"\n\n{DIV}"
