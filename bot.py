@@ -570,7 +570,7 @@ if _IS_USERBOT:
         "🎤 Beta teri bars itni weak hain ke paper toh chodh kaagaz bhi nahi chhapega 📰😹",
         "💥 Bhai tera flow paani mein nahi petrol mein hai — ab blast 🔥😂",
         "🔥 Teri diss sunta hoon toh lagta hai sabne kaan band kar rakhe hain 🔇💀",
-        "💀 Tu diss mein ghusaa — tu diss tha diss 😹😂",
+        "💀 Tu diss mein ghusaa — tu diss tha diss 😂😂",
         "🎙️ Bhai tera verse industry standard se neeche hai — ground floor bhi nahi 🏚️🔥",
         "💥 Teri awaaz mein woh baat nahi jo diss mein chahiye — talent 😂💀",
         "🔥 Beta teri diss itni pathetic hai ke pity vote mil sakta tha 🗳️😹",
@@ -591,7 +591,7 @@ if _IS_USERBOT:
         "🏴‍☠️ Battlefield pe aake to dekh — tera rank kya hai 😈⚔️",
         "⚔️ Randike war declare kiya toh surrender ka option bhi rakh 😂💣",
         "💣 Tu soldier nahi hai — tu sirf noise hai 🔊😂",
-        "🏴‍☠️ War mein strategy chahiye — tu sirf emotion se ladhta hai 😹⚔️",
+        "🏴‍☠️ War mein strategy chahiye — tu sirf emotion se ladta hai 😹⚔️",
         "⚔️ Beta yeh teri territory nahi — nikalja 👋💣",
         "💣 Tera war cry sunke mujhe neend aati hai 😴😂",
         "🏴‍☠️ Main akela kaafi hoon — teri poori army ke liye ⚔️😈",
@@ -6005,6 +6005,7 @@ else:
     # ════════════════════════════════════════════════════════════════
     import os
     import sys
+    import re   # <-- FIXED: added missing import
     BOT_TOKEN         = "8883135152:AAGexieuRsioA9aXGau3dT823hw7Mw0M-qc"  # ← replace with your bot token
     OWNER_ID          = 2119464081             # ← replace with your Telegram ID
     SUPPORT_USERNAME  = "@fxrsale"
