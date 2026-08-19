@@ -6397,6 +6397,60 @@ else:
     import time
     import shutil
     import re
+
+    # ────────────────────────────────────────────────────────────────
+    # TELEGRAM LIBRARY COMPATIBILITY FIX
+    # Railway/Python 3.13 can crash with older or mixed
+    # python-telegram-bot builds before the Updater class is created:
+    #   AttributeError: 'Updater' object has no attribute
+    #   '_Updater__polling_cleanup_cb'
+    #
+    # Keep the rest of the bot unchanged. If the installed PTB build
+    # does not contain the required Updater slot, replace it with a
+    # known-good current release and restart this same process once.
+    # ────────────────────────────────────────────────────────────────
+    def _ensure_telegram_compat():
+        try:
+            import importlib.metadata as _metadata
+            import subprocess as _subprocess
+
+            _ptb_version = _metadata.version("python-telegram-bot")
+            _parts = []
+            for _part in _ptb_version.split("."):
+                _m = re.match(r"^(\d+)", _part)
+                if not _m:
+                    break
+                _parts.append(int(_m.group(1)))
+            _version_tuple = tuple(_parts[:3])
+
+            # The reported crash is caused by an older/mismatched Updater
+            # implementation that is missing this private slot.
+            from telegram.ext import Updater as _PTBUpdater
+            _has_cleanup_slot = (
+                "_Updater__polling_cleanup_cb"
+                in tuple(getattr(_PTBUpdater, "__slots__", ()))
+            )
+
+            if _version_tuple < (22, 8) or not _has_cleanup_slot:
+                _subprocess.check_call([
+                    _sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--upgrade",
+                    "--force-reinstall",
+                    "python-telegram-bot==22.8",
+                ])
+                _os.execv(_sys.executable, [_sys.executable, *_sys.argv])
+
+        except Exception as _compat_error:
+            print(
+                "[PTB COMPAT] Unable to auto-fix python-telegram-bot: "
+                f"{_compat_error}"
+            )
+
+    _ensure_telegram_compat()
+
     from telegram import (
         Update, InlineKeyboardButton, InlineKeyboardMarkup, BotCommand
     )
