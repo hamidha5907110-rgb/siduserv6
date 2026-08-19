@@ -20,6 +20,17 @@
 import sys as _sys
 import os as _os
 
+# ─── GLOBAL IMPORTS (required for BOTH modes) ──────────────────────
+import re
+import time
+import json
+import threading
+import shutil
+import subprocess
+import asyncio
+import logging
+import types
+
 _IS_USERBOT = "--userbot" in _sys.argv or _os.environ.get("USERBOT_MODE") == "1"
 
 if _IS_USERBOT:
