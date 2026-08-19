@@ -490,7 +490,7 @@ if _IS_USERBOT:
         "🔥 Tera existence mere life mein irrelevant hai — bilkul sarkari kaam jaisa 📋😹",
         "🤣 Tu itna boring hai ke neend khud aa jaaye tujhe dekh ke 😴😂",
         "😹 Teri profile pic dekh ke emoji wale bhi sue kar sakte hain 😱🔥",
-        "🔥 Bhai tu aisa player hai jo kabhi goal nahi kar sakta apni hi team ke khilaf 😂⚽",
+        "🔥 Bhai tu aisa player hai jo kabhi goal nahi kar sakta apne hi team ke khilaf 😂⚽",
         "🤣 Teri advice sunna waisa hai jaise sade kele se rasta poochna 🍌😹",
         "😹 Tu garib nahi hai — but tujhe dekh ke gareebi ko takleef hoti hai 💰😂",
         "🔥 Teri kismat itni kharab hai ke lottery ticket bhi teri traf nahi dekhti 🎫😹",
@@ -570,7 +570,7 @@ if _IS_USERBOT:
         "🎤 Beta teri bars itni weak hain ke paper toh chodh kaagaz bhi nahi chhapega 📰😹",
         "💥 Bhai tera flow paani mein nahi petrol mein hai — ab blast 🔥😂",
         "🔥 Teri diss sunta hoon toh lagta hai sabne kaan band kar rakhe hain 🔇💀",
-        "💀 Tu diss mein ghusaa — tu diss tha diss 😂😂",
+        "💀 Tu diss mein ghusaa — tu diss tha diss 😹😂",
         "🎙️ Bhai tera verse industry standard se neeche hai — ground floor bhi nahi 🏚️🔥",
         "💥 Teri awaaz mein woh baat nahi jo diss mein chahiye — talent 😂💀",
         "🔥 Beta teri diss itni pathetic hai ke pity vote mil sakta tha 🗳️😹",
@@ -591,7 +591,7 @@ if _IS_USERBOT:
         "🏴‍☠️ Battlefield pe aake to dekh — tera rank kya hai 😈⚔️",
         "⚔️ Randike war declare kiya toh surrender ka option bhi rakh 😂💣",
         "💣 Tu soldier nahi hai — tu sirf noise hai 🔊😂",
-        "🏴‍☠️ War mein strategy chahiye — tu sirf emotion se ladta hai 😹⚔️",
+        "🏴‍☠️ War mein strategy chahiye — tu sirf emotion se ladhta hai 😹⚔️",
         "⚔️ Beta yeh teri territory nahi — nikalja 👋💣",
         "💣 Tera war cry sunke mujhe neend aati hai 😴😂",
         "🏴‍☠️ Main akela kaafi hoon — teri poori army ke liye ⚔️😈",
@@ -915,7 +915,7 @@ if _IS_USERBOT:
         "🙅 Bhai itna gira hua kaam dekh ke log muh fer lete hain 😤🔥",
         "😤 Tu itna neeche gira — zameen bhi neeche ho gayi 💀😂",
         "🙅 Beta sharam bhi nahi aata aisa karte hue 😤😹",
-        "😤 Yeh harkat dekh ke lagta hai — tujhe value kisi ne nahi sikhaya 💀🔥",
+        "😤 Yeh harkat dekh ke lagta hai — tujhe value kisi ne nahi sikhayi 💀🔥",
         "🙅 Bhai log tujhe dekh ke aankhein pher lete hain — soch kya kar raha hai 😤😂",
         "😤 Teri galti nahi — environment ki galti — par ab waqt hai change ka 💀😹",
         "🙅 Beta sharam isliye nahi aati kyunki sharam feel karna seekha nahi 😤🔥",
@@ -2107,7 +2107,7 @@ if _IS_USERBOT:
     "  .menu5 .menu6 .menu7 .menu8 .cmds\n"
     "\n"
     "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-    "⚡ 𝟱𝟬𝟬+ 𝗖𝗺𝗱𝘀  |  🔥 𝗣𝗿𝗲𝗳𝗶𝗽: .  |  𝗩𝟯"
+    "⚡ 𝟱𝟬𝟬+ 𝗖𝗺𝗱𝘀  |  🔥 𝗣𝗿𝗲𝗳𝗶𝘅: .  |  𝗩𝟯"
         )
         await safe_edit(event, cmds)
 
@@ -6005,7 +6005,6 @@ else:
     # ════════════════════════════════════════════════════════════════
     import os
     import sys
-    import re   # <-- FIXED: added missing import
     BOT_TOKEN         = "8883135152:AAGexieuRsioA9aXGau3dT823hw7Mw0M-qc"  # ← replace with your bot token
     OWNER_ID          = 2119464081             # ← replace with your Telegram ID
     SUPPORT_USERNAME  = "@fxrsale"
@@ -6115,30 +6114,6 @@ else:
 
     _load_api_profile()
 
-
-    # ★ NEW ★ Per‑user API credentials – stored in user's meta.json
-    def get_user_api(uid):
-        """Return (api_id, api_hash) stored for this user, or (None, None)."""
-        meta = _read_json(_db_path("users", str(uid), "meta.json"), {})
-        api_id = meta.get("api_id")
-        api_hash = meta.get("api_hash")
-        if api_id and api_hash:
-            return (int(api_id), str(api_hash))
-        return (None, None)
-
-    def set_user_api(uid, api_id, api_hash):
-        """Save per‑user API credentials in meta.json."""
-        api_id = _normalize_api_id(api_id)
-        api_hash = _normalize_api_hash(api_hash)
-        if not api_id or not api_hash:
-            raise ValueError("Invalid API ID / Hash")
-        path = _db_path("users", str(uid), "meta.json")
-        meta = _read_json(path, {})
-        meta["api_id"] = api_id
-        meta["api_hash"] = api_hash
-        _write_json(path, meta)
-
-
     def user_exists(uid):
         return os.path.isfile(_db_path("users", str(uid), "meta.json"))
 
@@ -6239,6 +6214,19 @@ else:
         if os.path.exists(_WELCOME_VIDEO_PATH):
             os.remove(_WELCOME_VIDEO_PATH)
 
+    # ─── PER-USER API CREDENTIALS ──────────────────────────────────────────────────
+    def get_user_api(uid):
+        meta = _read_json(_db_path("users", str(uid), "meta.json"), {})
+        api_id = meta.get("api_id", 0)
+        api_hash = meta.get("api_hash", "")
+        return api_id, api_hash
+
+    def set_user_api(uid, api_id, api_hash):
+        meta = _read_json(_db_path("users", str(uid), "meta.json"), {})
+        meta["api_id"] = api_id
+        meta["api_hash"] = api_hash
+        _write_json(_db_path("users", str(uid), "meta.json"), meta)
+
     import types as _types
     db = _types.SimpleNamespace(
         user_exists=user_exists, save_user_meta=save_user_meta,
@@ -6253,7 +6241,6 @@ else:
         get_welcome_video=get_welcome_video,
         set_welcome_video=set_welcome_video,
         remove_welcome_video=remove_welcome_video,
-        # ★ NEW ★
         get_user_api=get_user_api,
         set_user_api=set_user_api,
     )
@@ -6397,60 +6384,6 @@ else:
     import time
     import shutil
     import re
-
-    # ────────────────────────────────────────────────────────────────
-    # TELEGRAM LIBRARY COMPATIBILITY FIX
-    # Railway/Python 3.13 can crash with older or mixed
-    # python-telegram-bot builds before the Updater class is created:
-    #   AttributeError: 'Updater' object has no attribute
-    #   '_Updater__polling_cleanup_cb'
-    #
-    # Keep the rest of the bot unchanged. If the installed PTB build
-    # does not contain the required Updater slot, replace it with a
-    # known-good current release and restart this same process once.
-    # ────────────────────────────────────────────────────────────────
-    def _ensure_telegram_compat():
-        try:
-            import importlib.metadata as _metadata
-            import subprocess as _subprocess
-
-            _ptb_version = _metadata.version("python-telegram-bot")
-            _parts = []
-            for _part in _ptb_version.split("."):
-                _m = re.match(r"^(\d+)", _part)
-                if not _m:
-                    break
-                _parts.append(int(_m.group(1)))
-            _version_tuple = tuple(_parts[:3])
-
-            # The reported crash is caused by an older/mismatched Updater
-            # implementation that is missing this private slot.
-            from telegram.ext import Updater as _PTBUpdater
-            _has_cleanup_slot = (
-                "_Updater__polling_cleanup_cb"
-                in tuple(getattr(_PTBUpdater, "__slots__", ()))
-            )
-
-            if _version_tuple < (22, 8) or not _has_cleanup_slot:
-                _subprocess.check_call([
-                    _sys.executable,
-                    "-m",
-                    "pip",
-                    "install",
-                    "--upgrade",
-                    "--force-reinstall",
-                    "python-telegram-bot==22.8",
-                ])
-                _os.execv(_sys.executable, [_sys.executable, *_sys.argv])
-
-        except Exception as _compat_error:
-            print(
-                "[PTB COMPAT] Unable to auto-fix python-telegram-bot: "
-                f"{_compat_error}"
-            )
-
-    _ensure_telegram_compat()
-
     from telegram import (
         Update, InlineKeyboardButton, InlineKeyboardMarkup, BotCommand
     )
@@ -6479,9 +6412,6 @@ else:
 
     # ─── CONVERSATION STATES ──────────────────────────────────────────────────────
     ASK_PHONE, ASK_CODE, ASK_2FA = range(3)
-
-    # ★ NEW ★ states for per‑user API setup
-    ASK_USER_API_ID, ASK_USER_API_HASH = range(10, 12)
 
     # ─── PENDING LOGINS ───────────────────────────────────────────────────────────
     pending_logins: dict = {}
@@ -6752,7 +6682,8 @@ else:
 
 
     # ════════════════════════════════════════════════════════════════════════════════
-    #   V6 /setapi — owner-only API credential wizard
+    #   V6 /setapi — owner-only API credential wizard (now owner-specific global)
+    #   Users should use /setmyapi for per-user credentials.
     # ════════════════════════════════════════════════════════════════════════════════
 
     API_SET_ID, API_SET_HASH = range(10, 12)
@@ -6771,7 +6702,7 @@ else:
 
         msg = await update.message.reply_text(
             f"{TOP}\n"
-            f"║  🔐  {bold_serif('API Profile V6')}  🔐  ║\n"
+            f"║  🔐  {bold_serif('API Profile V6 (Owner Global)')}  🔐  ║\n"
             f"{BOT}\n\n"
             f"{script('This saves the Telegram API ID and API hash on the server.')}"
             f"{current}\n\n"
@@ -6877,106 +6808,61 @@ else:
         )
         return ConversationHandler.END
 
-    # ★ NEW ★ Per‑user API setup commands
+    # ════════════════════════════════════════════════════════════════════════════════
+    #   USER-LEVEL API CREDENTIALS — /setmyapi and /myapistatus
+    # ════════════════════════════════════════════════════════════════════════════════
+
     async def cmd_setmyapi(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not await check_blocked(update): return
         uid = update.effective_user.id
-
-        # If user already has API set, show current value
-        user_api = db.get_user_api(uid)
-        if user_api[0]:
-            current = f"\n\n🧩 {sans_bold('Current')}: {mono(str(user_api[0]))}\n🔑 {sans_bold('Hash')}: {mono(user_api[1][:4] + '••••••' + user_api[1][-4:])}"
-        else:
-            current = "\n\n⚠️ No personal API set yet."
-
+        args = context.args
+        if len(args) < 2:
+            await update.message.reply_text(
+                f"🔑 {bold_serif('Set Your Telegram API Credentials')}\n\n"
+                f"📌 {sans_bold('Usage')}: {mono('/setmyapi <api_id> <api_hash>')}\n\n"
+                f"💡 {script('Get from')} {mono('my.telegram.org')}\n"
+                f"📝 {italic_serif('Example')}: {mono('/setmyapi 12345678 abcdef123456...')}",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+            return
+        api_id = _normalize_api_id(args[0])
+        api_hash = _normalize_api_hash(args[1])
+        if not api_id or not api_hash:
+            await update.message.reply_text(
+                f"❌ {bold_serif('Invalid API credentials')}\n"
+                f"{script('Ensure api_id is numeric and api_hash is alphanumeric.')}",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+            return
+        db.set_user_api(uid, api_id, api_hash)
+        masked = f"{api_hash[:4]}••••••••{api_hash[-4:]}" if len(api_hash) > 8 else "••••••••"
         await update.message.reply_text(
-            f"{TOP}\n"
-            f"║  🔐  {bold_serif('My API Credentials')}  🔐  ║\n"
-            f"{BOT}\n\n"
-            f"{script('Set your own Telegram API ID and API hash.')}"
-            f"{current}\n\n"
-            f"1️⃣ {script('Send your Telegram API ID')}\n"
-            f"2️⃣ {script('Then send your Telegram API hash')}\n\n"
-            f"🛡️ {italic_serif('These are used only for your userbots.')}\n"
-            f"🚫 {italic_serif('Send /cancel to abort')}",
+            f"✅ {bold_serif('API Credentials Saved!')}\n\n"
+            f"🆔 {sans_bold('API ID')}   : {mono(str(api_id))}\n"
+            f"🔑 {sans_bold('API Hash')} : {mono(masked)}\n\n"
+            f"🚀 {script('Now you can host your userbot with')} /host",
             parse_mode=ParseMode.MARKDOWN,
         )
-        return ASK_USER_API_ID
-
-    async def cmd_setmyapi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        raw = update.message.text.strip()
-        api_id = _normalize_api_id(raw)
-        if not api_id:
-            await update.message.reply_text(
-                f"❌ {bold_serif('Invalid API ID')}\n\n"
-                f"{script('Example')}: {mono('12345678')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return ASK_USER_API_ID
-
-        context.user_data["user_api_id"] = api_id
-        await update.message.reply_text(
-            f"✅ {sans_bold('API ID accepted')}: {mono(str(api_id))}\n\n"
-            f"🔑 {script('Now send your Telegram API hash')}\n"
-            f"🚫 {italic_serif('Or send /cancel')}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        return ASK_USER_API_HASH
-
-    async def cmd_setmyapi_hash(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        uid = update.effective_user.id
-        api_hash = _normalize_api_hash(update.message.text.strip())
-        api_id = _normalize_api_id(context.user_data.get("user_api_id"))
-
-        if not api_id:
-            await update.message.reply_text(
-                f"❌ {bold_serif('API setup state lost.')}\n\n{script('Please run /setmyapi again.')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return ConversationHandler.END
-
-        if not api_hash:
-            await update.message.reply_text(
-                f"❌ {bold_serif('Invalid API hash')}\n\n"
-                f"{script('Use the hash from my.telegram.org')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return ASK_USER_API_HASH
-
-        try:
-            db.set_user_api(uid, api_id, api_hash)
-            context.user_data.pop("user_api_id", None)
-            await update.message.reply_text(
-                f"{TOP}\n║  ✅  {bold_serif('Personal API Saved')}  ✅  ║\n{BOT}\n\n"
-                f"🆔 {sans_bold('API ID')}   : {mono(str(api_id))}\n"
-                f"🔑 {sans_bold('API Hash')} : {mono(api_hash[:4] + '••••••' + api_hash[-4:])}\n\n"
-                f"{italic_serif('You can now /host your userbot.')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-        except Exception as e:
-            await update.message.reply_text(
-                f"❌ {bold_serif('Failed to save')}\n{mono(str(e)[:120])}"
-            )
-
-        return ConversationHandler.END
 
     async def cmd_myapistatus(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not await check_blocked(update): return
         uid = update.effective_user.id
         api_id, api_hash = db.get_user_api(uid)
-        if api_id and api_hash:
-            masked = api_hash[:4] + "••••••" + api_hash[-4:]
+        if not api_id or not api_hash:
             await update.message.reply_text(
-                f"🔐 {bold_serif('Your API Credentials')}\n\n"
-                f"🆔 {sans_bold('API ID')}   : {mono(str(api_id))}\n"
-                f"🔑 {sans_bold('API Hash')} : {mono(masked)}\n\n"
-                f"✅ {italic_serif('You can now host userbots.')}"
+                f"⚠️ {bold_serif('No API credentials set yet.')}\n\n"
+                f"🔑 {script('Set them with')} /setmyapi",
+                parse_mode=ParseMode.MARKDOWN,
             )
-        else:
-            await update.message.reply_text(
-                f"⚠️ {bold_serif('No personal API set yet.')}\n\n"
-                f"📌 {script('Use /setmyapi to add your credentials.')}"
-            )
+            return
+        masked = f"{api_hash[:4]}••••••••{api_hash[-4:]}" if len(api_hash) > 8 else "••••••••"
+        await update.message.reply_text(
+            f"🔐 {bold_serif('Your API Credentials')}\n\n"
+            f"🆔 {sans_bold('API ID')}   : {mono(str(api_id))}\n"
+            f"🔑 {sans_bold('API Hash')} : {mono(masked)}",
+            parse_mode=ParseMode.MARKDOWN,
+        )
+
 
     # ════════════════════════════════════════════════════════════════════════════════
     #   /setwelcomevideo (Owner)
@@ -7056,8 +6942,8 @@ else:
             f"🔹 {mono('/restart')}     {script('Restart Userbot')}\n"
             f"🔹 {mono('/logout')}      {script('Logout an Account')}\n"
             f"🔹 {mono('/support')}     {script('Contact Admin')}\n"
-            f"🔹 {mono('/setmyapi')}    {script('Set Personal API')}  ★ NEW\n"
-            f"🔹 {mono('/myapistatus')} {script('View Personal API')}  ★ NEW\n\n"
+            f"🔹 {mono('/setmyapi')}    {script('Set Your Own API Credentials')} ★ NEW\n"
+            f"🔹 {mono('/myapistatus')} {script('Check Your API Status')} ★ NEW\n\n"
             f"{DIV}\n"
             f"{'━'*3} {sans_bold('Premium Commands')} {'━'*3}\n\n"
             f"🔸 {mono('/supportraid')} {bold_italic_serif('Pro Support Raid')}\n\n"
@@ -7116,7 +7002,7 @@ else:
 
 
     # ════════════════════════════════════════════════════════════════════════════════
-    #   /host — Phone + OTP Login Flow  (supports multiple. accounts)
+    #   /host — Phone + OTP Login Flow (uses user's own API credentials)
     # ════════════════════════════════════════════════════════════════════════════════
 
     async def cmd_host_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -7129,14 +7015,19 @@ else:
         if not await check_blocked(update): return ConversationHandler.END
         uid = update.effective_user.id
 
-        # ★ NEW ★ check if user has personal API credentials
-        user_api = db.get_user_api(uid)
-        if not user_api[0]:
+        # ── Check if user has set their own API credentials ──
+        user_api_id, user_api_hash = db.get_user_api(uid)
+        if not user_api_id or not user_api_hash:
             await reply(
-                f"🔐 {bold_serif('Personal API Required')}\n\n"
-                f"{script('You must set your own Telegram API credentials before hosting.')}\n\n"
-                f"📌 {script('Use:')} {mono('/setmyapi')}\n"
-                f"🔹 {italic_serif('Then run /host again.')}",
+                f"❌ {bold_serif('Telegram API Credentials Required')}\n\n"
+                f"{script('You need to set your own API ID and API hash before hosting.')}\n\n"
+                f"🔑 {sans_bold('How to get?')}\n"
+                f"1. Go to {mono('my.telegram.org')}\n"
+                f"2. Login and create an app\n"
+                f"3. Copy {mono('api_id')} and {mono('api_hash')}\n\n"
+                f"📌 {script('Then use:')} {mono('/setmyapi')}\n"
+                f"   {italic_serif('Example:')} {mono('/setmyapi 12345678 abcdef...')}\n\n"
+                f"🔄 {script('After setting, try /host again.')}",
                 parse_mode=ParseMode.MARKDOWN,
             )
             return ConversationHandler.END
@@ -7163,19 +7054,6 @@ else:
             return ConversationHandler.END
 
         await cleanup_pending(uid)
-
-        # V6: refuse to start the OTP flow if no API credentials are configured.
-        if not _api_ready():
-            await reply(
-                f"{TOP}\n"
-                f"║  🔐  {bold_serif('Telegram API Required')}  🔐  ║\n"
-                f"{BOT}\n\n"
-                f"{script('No Telegram API profile is configured on the server yet.')}\n\n"
-                f"👤 {script('Owner')}: run {mono('/setapi')} once.\n"
-                f"👥 {script('Users')}: then /host works normally.",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return ConversationHandler.END
 
         extra = f"\n\n📱 {italic_serif('Account')} {mono(str(len(hosted)+1))} {italic_serif('of')} {mono(str(MAX_ACCOUNTS_PER_USER))}" if hosted else ""
 
@@ -7206,6 +7084,16 @@ else:
             )
             return ASK_PHONE
 
+        # ── Retrieve user's API credentials ──
+        user_api_id, user_api_hash = db.get_user_api(uid)
+        if not user_api_id or not user_api_hash:
+            await update.message.reply_text(
+                f"❌ {bold_serif('API Credentials Missing')}\n\n"
+                f"{script('Please set them with')} /setmyapi {script('first.')}",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+            return ConversationHandler.END
+
         msg = await update.message.reply_text(
             f"⏳ {sans_bold('Preparing Telegram Login')}... 🔄"
         )
@@ -7219,7 +7107,7 @@ else:
                 ],
                 delay=0.09,
             )
-            client = TelegramClient(StringSession(), TELEGRAM_API_ID, TELEGRAM_API_HASH)
+            client = TelegramClient(StringSession(), user_api_id, user_api_hash)
             await client.connect()
             result = await client.send_code_request(phone)
             pending_logins[uid] = {
@@ -7360,7 +7248,6 @@ else:
             return ConversationHandler.END
 
 
-    # ★ MODIFIED ★ _deploy_userbot now uses the user's own API credentials
     async def _deploy_userbot(update, context, uid, session_string, phone, msg):
         name     = update.effective_user.first_name or "User"
         accounts = db.get_accounts(uid)
@@ -7370,12 +7257,12 @@ else:
             slot += 1
         acc_num = slot + 1
 
-        # ★ NEW ★ get user's personal API credentials
+        # ── Use user's own API credentials ──
         user_api_id, user_api_hash = db.get_user_api(uid)
-        if not user_api_id:
+        if not user_api_id or not user_api_hash:
             await msg.edit_text(
-                f"❌ {bold_serif('Personal API not set')}\n\n"
-                f"{script('Please run')} {mono('/setmyapi')} {script('first.')}",
+                f"❌ {bold_serif('API Credentials Missing')}\n\n"
+                f"{script('Please set them with')} /setmyapi",
                 parse_mode=ParseMode.MARKDOWN,
             )
             return
@@ -7393,11 +7280,7 @@ else:
             delay=0.09,
         )
         ok = runner.start_userbot(
-            uid, slot,
-            str(user_api_id),        # <-- user's own API ID
-            user_api_hash,           # <-- user's own API hash
-            session_string,
-            str(uid),
+            uid, slot, str(user_api_id), user_api_hash, session_string, str(uid),
         )
         if ok:
             db.save_user_meta(uid, {"first_name": name})
@@ -7687,7 +7570,6 @@ else:
         )
 
 
-    # ★ MODIFIED ★ _do_restart now uses the user's personal API
     async def _do_restart(update_or_query, uid, slot, acct):
         """Actually restart a specific slot. Works for both message and callback."""
         is_cb = hasattr(update_or_query, "callback_query") and update_or_query.callback_query
@@ -7697,22 +7579,20 @@ else:
         else:
             send = update_or_query.message.reply_text
 
+        # Use user's own API credentials
         user_api_id, user_api_hash = db.get_user_api(uid)
-        if not user_api_id:
+        if not user_api_id or not user_api_hash:
             await send(
-                f"❌ {bold_serif('Personal API not set')}\n\n"
-                f"{script('Run /setmyapi first.')}",
+                f"❌ {bold_serif('API Credentials Missing')}\n\n"
+                f"{script('Please set them with')} /setmyapi",
                 parse_mode=ParseMode.MARKDOWN,
             )
             return
 
         msg = await send(f"🔄 {sans_bold('Restarting Account')} #{slot+1}...")
         ok = runner.restart_userbot(
-            uid, slot,
-            str(user_api_id),
-            user_api_hash,
-            acct.get("session_string", ""),
-            str(uid),
+            uid, slot, str(user_api_id), user_api_hash,
+            acct.get("session_string", ""), str(uid),
         )
         if ok:
             await msg.edit_text(
@@ -7843,7 +7723,6 @@ else:
     #   /restartall (Owner)
     # ════════════════════════════════════════════════════════════════════════════════
 
-    # ★ MODIFIED ★ restartall now uses each user's personal API
     async def cmd_restartall(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not await owner_only(update): return
         msg   = await update.message.reply_text(f"🔄 {sans_bold('Restarting All Userbots')}...")
@@ -7851,19 +7730,16 @@ else:
         for uid_str in db.get_all_users():
             uid = int(uid_str)
             if db.is_blocked(uid): continue
-            user_api_id, user_api_hash = db.get_user_api(uid)
-            if not user_api_id:
-                # Skip users without personal API
-                continue
             for acct in db.get_accounts(uid):
                 if not acct.get("hosted") or not acct.get("session_string"): continue
                 slot = acct["slot"]
+                # Use user's own API credentials
+                user_api_id, user_api_hash = db.get_user_api(uid)
+                if not user_api_id or not user_api_hash:
+                    continue
                 ok = runner.restart_userbot(
-                    uid, slot,
-                    str(user_api_id),
-                    user_api_hash,
-                    acct["session_string"],
-                    uid_str,
+                    uid, slot, str(user_api_id), user_api_hash,
+                    acct["session_string"], uid_str,
                 )
                 if ok: count += 1
         await msg.edit_text(
@@ -8341,12 +8217,12 @@ else:
             if not acct:
                 await query.message.reply_text(f"❌ {italic_serif('Account not found.')}")
                 return
-            # Use the user's personal API
+            # Use user's API
             user_api_id, user_api_hash = db.get_user_api(uid)
-            if not user_api_id:
+            if not user_api_id or not user_api_hash:
                 await query.message.reply_text(
-                    f"❌ {bold_serif('Personal API missing.')}\n\n"
-                    f"{script('Run /setmyapi first.')}",
+                    f"❌ {bold_serif('API Credentials Missing')}\n\n"
+                    f"{script('Please set them with')} /setmyapi",
                     parse_mode=ParseMode.MARKDOWN,
                 )
                 return
@@ -8354,11 +8230,8 @@ else:
                 f"🔄 {sans_bold('Restarting Account')} #{slot+1}..."
             )
             ok = runner.restart_userbot(
-                uid, slot,
-                str(user_api_id),
-                user_api_hash,
-                acct.get("session_string", ""),
-                str(uid),
+                uid, slot, str(user_api_id), user_api_hash,
+                acct.get("session_string", ""), str(uid),
             )
             if ok:
                 await msg.edit_text(
@@ -8381,11 +8254,12 @@ else:
             if not acct:
                 await query.message.reply_text(f"❌ {italic_serif('Account not found.')}")
                 return
+            # Use user's API
             user_api_id, user_api_hash = db.get_user_api(uid)
-            if not user_api_id:
+            if not user_api_id or not user_api_hash:
                 await query.message.reply_text(
-                    f"❌ {bold_serif('Personal API missing.')}\n\n"
-                    f"{script('Run /setmyapi first.')}",
+                    f"❌ {bold_serif('API Credentials Missing')}\n\n"
+                    f"{script('Please set them with')} /setmyapi",
                     parse_mode=ParseMode.MARKDOWN,
                 )
                 return
@@ -8393,11 +8267,8 @@ else:
                 f"▶️ {sans_bold('Starting Account')} #{slot+1}..."
             )
             ok = runner.start_userbot(
-                uid, slot,
-                str(user_api_id),
-                user_api_hash,
-                acct.get("session_string", ""),
-                str(uid),
+                uid, slot, str(user_api_id), user_api_hash,
+                acct.get("session_string", ""), str(uid),
             )
             if ok:
                 await msg.edit_text(
@@ -8476,7 +8347,7 @@ else:
 
 
     # ════════════════════════════════════════════════════════════════════════════════
-    #   AUTO HEALTH CHECK (updated to use per‑user API)
+    #   AUTO HEALTH CHECK
     # ════════════════════════════════════════════════════════════════════════════════
 
     async def auto_health_check(context: ContextTypes.DEFAULT_TYPE):
@@ -8484,18 +8355,15 @@ else:
             uid = int(uid_str)
             if db.is_blocked(uid): continue
             user_api_id, user_api_hash = db.get_user_api(uid)
-            if not user_api_id:
-                continue
+            if not user_api_id or not user_api_hash:
+                continue  # cannot restart without API creds
             for acct in db.get_accounts(uid):
                 if not acct.get("hosted") or not acct.get("session_string"): continue
                 slot = acct["slot"]
                 if not runner.is_running(uid, slot):
                     runner.start_userbot(
-                        uid, slot,
-                        str(user_api_id),
-                        user_api_hash,
-                        acct["session_string"],
-                        uid_str,
+                        uid, slot, str(user_api_id), user_api_hash,
+                        acct["session_string"], uid_str,
                     )
 
 
@@ -8510,6 +8378,8 @@ else:
             BotCommand("help",            "All Commands"),
             BotCommand("commands",        "Userbot Features"),
             BotCommand("host",            "Add & Deploy Account"),
+            BotCommand("setmyapi",        "Set Your API Credentials ★ NEW"),
+            BotCommand("myapistatus",     "Check Your API Status ★ NEW"),
             BotCommand("myaccounts",      "Manage All Accounts"),
             BotCommand("status",          "Check Userbot Status"),
             BotCommand("restart",         "Restart Userbot"),
@@ -8530,25 +8400,19 @@ else:
             BotCommand("broadcast",       "Broadcast Message (Owner)"),
             BotCommand("setapi",           "Set Telegram API (Owner)"),
             BotCommand("apistatus",        "Show API Status (Owner)"),
-            # ★ NEW ★ per‑user API commands
-            BotCommand("setmyapi",         "Set Personal API (User)"),
-            BotCommand("myapistatus",      "View Personal API (User)"),
         ])
         count = 0
         for uid_str in db.get_all_users():
             uid = int(uid_str)
             if db.is_blocked(uid): continue
             user_api_id, user_api_hash = db.get_user_api(uid)
-            if not user_api_id:
+            if not user_api_id or not user_api_hash:
                 continue
             for acct in db.get_accounts(uid):
                 if not acct.get("hosted") or not acct.get("session_string"): continue
                 ok = runner.start_userbot(
-                    uid, acct["slot"],
-                    str(user_api_id),
-                    user_api_hash,
-                    acct["session_string"],
-                    uid_str,
+                    uid, acct["slot"], str(user_api_id), user_api_hash,
+                    acct["session_string"], uid_str,
                 )
                 if ok: count += 1
         logger.info(f"[STARTUP] Auto-started {count} userbots.")
@@ -8569,17 +8433,6 @@ else:
                 ASK_PHONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, host_got_phone)],
                 ASK_CODE:  [MessageHandler(filters.TEXT & ~filters.COMMAND, host_got_code)],
                 ASK_2FA:   [MessageHandler(filters.TEXT & ~filters.COMMAND, host_got_2fa)],
-            },
-            fallbacks=[CommandHandler("cancel", host_cancel)],
-            allow_reentry=True,
-        )
-
-        # ★ NEW ★ per‑user API conversation
-        user_api_conv = ConversationHandler(
-            entry_points=[CommandHandler("setmyapi", cmd_setmyapi)],
-            states={
-                ASK_USER_API_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, cmd_setmyapi_id)],
-                ASK_USER_API_HASH: [MessageHandler(filters.TEXT & ~filters.COMMAND, cmd_setmyapi_hash)],
             },
             fallbacks=[CommandHandler("cancel", host_cancel)],
             allow_reentry=True,
@@ -8606,6 +8459,8 @@ else:
         app.add_handler(CommandHandler("secretfunction",  cmd_secretfunction))
         app.add_handler(CommandHandler("setwelcomevideo", cmd_setwelcomevideo))
         app.add_handler(CommandHandler("removewelcomevideo", cmd_removewelcomevideo))
+        app.add_handler(CommandHandler("setmyapi",        cmd_setmyapi))   # ★ NEW
+        app.add_handler(CommandHandler("myapistatus",     cmd_myapistatus)) # ★ NEW
         api_conv = ConversationHandler(
             entry_points=[CommandHandler("setapi", cmd_setapi_start)],
             states={
@@ -8619,10 +8474,6 @@ else:
         app.add_handler(api_conv)
         app.add_handler(CommandHandler("apistatus", cmd_apistatus))
         app.add_handler(CommandHandler("broadcast",         cmd_broadcast))
-        # ★ NEW ★
-        app.add_handler(user_api_conv)
-        app.add_handler(CommandHandler("myapistatus", cmd_myapistatus))
-
         app.add_handler(CallbackQueryHandler(callback_handler))
 
         if app.job_queue:
