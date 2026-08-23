@@ -269,6 +269,11 @@ def process_login_step(user_id, text, bot, message):
             return
         session["phone"] = phone
         # Create pyrogram client
+        # Check if API_ID and API_HASH are valid (not placeholders)
+        if API_ID == 12345 or API_HASH == "your_api_hash":
+            bot.reply_to(message, "❌ Please set valid API_ID and API_HASH at the top of the script (get from my.telegram.org).")
+            del login_sessions[user_id]
+            return
         try:
             client = pyrogram.Client(
                 f"userbot_{user_id}",
