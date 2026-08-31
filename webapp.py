@@ -9,7 +9,9 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 
 # Import the bot's database and runner (only works when not in userbot mode)
 # The bot file must be in the same directory.
-import sid_bot
+# Change this line:
+# To this:
+import my_awesome_bot as sid_bot
 
 app = Flask(__name__)
 
