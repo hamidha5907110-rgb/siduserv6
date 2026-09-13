@@ -6010,12 +6010,11 @@ else:
     OWNER_ID          = 8115054010             # ← replace with your Telegram ID
     SUPPORT_USERNAME  = "@fxrsale"
     MAX_USERBOTS      = int(os.environ.get("MAX_USERBOTS", "50") or "50")
-    # Telegram API credentials are loaded at runtime from:
-    #   1) ./data/api_config.json (owner-managed via /setapi)
-    #   2) TELEGRAM_API_ID / TELEGRAM_API_HASH environment variables
-    # No source-code editing is required after this upgrade.
-    TELEGRAM_API_ID   = int(os.environ.get("TELEGRAM_API_ID", "0") or "0")
-    TELEGRAM_API_HASH = os.environ.get("TELEGRAM_API_HASH", "")
+    # Telegram API credentials: use the same built-in defaults already used by
+    # the embedded userbot, while still allowing environment overrides.
+    # No /setapi command or server-side API profile is required.
+    TELEGRAM_API_ID   = int(os.environ.get("TELEGRAM_API_ID", "35378028") or "35378028")
+    TELEGRAM_API_HASH = os.environ.get("TELEGRAM_API_HASH", "94d5c73a29abe20afe9676e885f7bb2c")
 
     # ════════════════════════════════════════════════════════════════
     #   INLINE DATABASE — JSON file-based storage in ./data/
@@ -6045,104 +6044,6 @@ else:
                 json.dump(data, f, ensure_ascii=False, indent=2)
             os.replace(tmp, path)
 
-
-    # ════════════════════════════════════════════════════════════════
-    #   V6 API PROFILE — runtime managed Telegram API credentials
-    # ════════════════════════════════════════════════════════════════
-    API_CONFIG_FILE = _db_path("api_config.json")
-
-    _api_file_cache = {"api_id": 0, "api_hash": ""}
-
-    def _normalize_api_id(value):
-        try:
-            value = int(str(value).strip())
-            return value if value > 0 else 0
-        except Exception:
-            return 0
-
-    def _normalize_api_hash(value):
-        value = str(value or "").strip()
-        return value if re.fullmatch(r"[A-Za-z0-9]{16,128}", value) else ""
-
-    def _load_api_profile():
-        global TELEGRAM_API_ID, TELEGRAM_API_HASH, _api_file_cache
-
-        stored = _read_json(API_CONFIG_FILE, {})
-        file_id = _normalize_api_id(stored.get("api_id"))
-        file_hash = _normalize_api_hash(stored.get("api_hash"))
-
-        env_id = _normalize_api_id(os.environ.get("TELEGRAM_API_ID"))
-        env_hash = _normalize_api_hash(os.environ.get("TELEGRAM_API_HASH"))
-
-        # Prefer a complete saved server profile. If it is incomplete,
-        # fall back to a complete environment profile instead of mixing
-        # an ID from one source with a hash from another.
-        if file_id and file_hash:
-            TELEGRAM_API_ID = file_id
-            TELEGRAM_API_HASH = file_hash
-        elif env_id and env_hash:
-            TELEGRAM_API_ID = env_id
-            TELEGRAM_API_HASH = env_hash
-
-        _api_file_cache = {
-            "api_id": _normalize_api_id(TELEGRAM_API_ID),
-            "api_hash": _normalize_api_hash(TELEGRAM_API_HASH),
-        }
-        TELEGRAM_API_ID = _api_file_cache["api_id"]
-        TELEGRAM_API_HASH = _api_file_cache["api_hash"]
-        return _api_file_cache.copy()
-
-    def _save_api_profile(api_id, api_hash):
-        global TELEGRAM_API_ID, TELEGRAM_API_HASH, _api_file_cache
-
-        api_id = _normalize_api_id(api_id)
-        api_hash = _normalize_api_hash(api_hash)
-        if not api_id or not api_hash:
-            raise ValueError("Invalid Telegram API ID/API hash.")
-
-        payload = {
-            "api_id": api_id,
-            "api_hash": api_hash,
-            "updated_at": int(time.time()),
-            "managed_by": "SID Premium Hoster V6",
-        }
-
-        # Persist first, then read the file back and verify the exact values.
-        _write_json(API_CONFIG_FILE, payload)
-
-        if not os.path.isfile(API_CONFIG_FILE):
-            raise RuntimeError("API profile file was not created on the server.")
-
-        stored = _read_json(API_CONFIG_FILE, {})
-        saved_id = _normalize_api_id(stored.get("api_id"))
-        saved_hash = _normalize_api_hash(stored.get("api_hash"))
-        if saved_id != api_id or saved_hash != api_hash:
-            raise RuntimeError("API profile verification failed after saving.")
-
-        try:
-            os.chmod(API_CONFIG_FILE, 0o600)
-        except Exception:
-            pass
-
-        # Apply the newly saved profile immediately to the running hoster.
-        TELEGRAM_API_ID = api_id
-        TELEGRAM_API_HASH = api_hash
-        _api_file_cache = {
-            "api_id": api_id,
-            "api_hash": api_hash,
-        }
-        return _api_file_cache.copy()
-
-    def _api_ready():
-        return bool(_normalize_api_id(TELEGRAM_API_ID) and _normalize_api_hash(TELEGRAM_API_HASH))
-
-    def _masked_api_hash():
-        value = str(TELEGRAM_API_HASH or "")
-        if len(value) <= 8:
-            return "••••••••"
-        return f"{value[:4]}••••••••{value[-4:]}"
-
-    _load_api_profile()
 
     def user_exists(uid):
         return os.path.isfile(_db_path("users", str(uid), "meta.json"))
@@ -6593,14 +6494,6 @@ else:
             last = frame
             await asyncio.sleep(delay)
 
-    def _api_banner():
-        if _api_ready():
-            return (
-                f"🔐 {sans_bold('API Profile')} : {script('Ready')}  "
-                f"• {mono(str(TELEGRAM_API_ID))} • {mono(_masked_api_hash())}"
-            )
-        return f"⚠️ {bold_serif('API Profile Missing')} — {script('/setapi to configure')}"
-
     # ════════════════════════════════════════════════════════════════════════════════
     #   /start
     # ════════════════════════════════════════════════════════════════════════════════
@@ -6642,7 +6535,6 @@ else:
         if is_owner(uid):
             keyboard.append([
                 InlineKeyboardButton("📢  𝗕𝗿𝗼𝗮𝗱𝗰𝗮𝘀𝘁  ✦", callback_data="broadcast_menu"),
-                InlineKeyboardButton("🔐  𝗔𝗣𝗜 𝗦𝗲𝘁𝘁𝗶𝗻𝗴𝘀  ✦", callback_data="api_settings"),
             ])
 
         # ── Premium welcome composition ──────────────────────────────────────────
@@ -6652,12 +6544,6 @@ else:
             if hosted else
             f"⚪ {sans_bold('READY')}  •  {italic_serif('No userbot hosted yet')}"
         )
-        api_state = (
-            f"🔐 {sans_bold('API')}  •  {script('Configured')}"
-            if _api_ready() else
-            f"🔐 {sans_bold('API')}  •  {script('Setup required')}"
-        )
-
         text = (
             "╭──────────────────────────────╮\n"
             f"│   ✦  {double_struck('SID PREMIUM HOSTER')}  ✦   │\n"
@@ -6669,7 +6555,6 @@ else:
             f"🧩 {bold_serif('CONTROL CENTER')}\n"
             f"{DIV}\n"
             f"{live_state}\n"
-            f"{api_state}\n"
             f"📦 {sans_bold('Features')}  •  {mono('500+ Commands')}\n"
             f"⚔️ {sans_bold('Engine')}    •  {mono('20 Modes')}  •  {mono('1000+ Texts')}\n"
             f"🪪 {fraktur('Your ID')} • `{uid}`\n"
@@ -6742,181 +6627,6 @@ else:
                     reply_markup=InlineKeyboardMarkup(keyboard),
                 )
 
-
-    # ════════════════════════════════════════════════════════════════════════════════
-    #   V6 /setapi — owner-only API credential wizard
-    # ════════════════════════════════════════════════════════════════════════════════
-
-    API_SET_ID, API_SET_HASH = range(10, 12)
-
-    async def cmd_setapi_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        if not await owner_only(update):
-            return ConversationHandler.END
-
-        # Also support: /setapi <api_id> <api_hash>
-        # while keeping the original two-step wizard available.
-        args = list(getattr(context, "args", []) or [])
-        if len(args) == 2:
-            api_id = _normalize_api_id(args[0])
-            api_hash = _normalize_api_hash(args[1])
-
-            if not api_id:
-                await update.message.reply_text(
-                    f"❌ {bold_serif('Invalid API ID')}\\n\\n"
-                    f"{script('Example')}: {mono('/setapi 12345678 0123456789abcdef0123456789abcdef')}",
-                    parse_mode=ParseMode.MARKDOWN,
-                )
-                return ConversationHandler.END
-
-            if not api_hash:
-                await update.message.reply_text(
-                    f"❌ {bold_serif('Invalid API hash')}\\n\\n"
-                    f"{script('Use the Telegram API hash from my.telegram.org')}",
-                    parse_mode=ParseMode.MARKDOWN,
-                )
-                return ConversationHandler.END
-
-            try:
-                _save_api_profile(api_id, api_hash)
-                await update.message.reply_text(
-                    f"{TOP}\\n║  ✅  {bold_serif('API Profile Saved')}  ✅  ║\\n{BOT}\\n\\n"
-                    f"🆔 {sans_bold('API ID')}   : {mono(str(TELEGRAM_API_ID))}\\n"
-                    f"🔑 {sans_bold('API Hash')} : {mono(_masked_api_hash())}\\n\\n"
-                    f"{_api_banner()}\\n\\n"
-                    f"💾 {script('Saved and verified on the server.')}",
-                    parse_mode=ParseMode.MARKDOWN,
-                )
-            except Exception as e:
-                await update.message.reply_text(
-                    f"❌ {bold_serif('API Save Failed')}\\n\\n{mono(str(e)[:160])}",
-                    parse_mode=ParseMode.MARKDOWN,
-                )
-            return ConversationHandler.END
-
-        _load_api_profile()
-
-        if _api_ready():
-            current = (
-                f"\\n\\n🧩 {sans_bold('Current')}: {mono(str(TELEGRAM_API_ID))}"
-                f"\\n🔑 {sans_bold('Hash')}: {mono(_masked_api_hash())}"
-            )
-        else:
-            current = "\\n\\n⚠️ No API profile is configured yet."
-
-        await update.message.reply_text(
-            f"{TOP}\\n"
-            f"║  🔐  {bold_serif('API Profile V6')}  🔐  ║\\n"
-            f"{BOT}\\n\\n"
-            f"{script('This saves the Telegram API ID and API hash on the server.')}"
-            f"{current}\\n\\n"
-            f"1️⃣ {script('Send your Telegram API ID')}\\n"
-            f"2️⃣ {script('Then send your Telegram API hash')}\\n\\n"
-            f"🛡️ {italic_serif('Owner only • stored in data/api_config.json')}\\n"
-            f"🚫 {italic_serif('Send /cancel to abort')}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        return API_SET_ID
-
-    async def cmd_setapi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        if not await owner_only(update):
-            return ConversationHandler.END
-
-        raw = update.message.text.strip()
-        api_id = _normalize_api_id(raw)
-        if not api_id:
-            await update.message.reply_text(
-                f"❌ {bold_serif('Invalid API ID')}\\n\\n"
-                f"{script('Example')}: {mono('12345678')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return API_SET_ID
-
-        context.user_data["v6_api_id"] = api_id
-        await update.message.reply_text(
-            f"✅ {sans_bold('API ID accepted')}: {mono(str(api_id))}\\n\\n"
-            f"🔑 {script('Now send your Telegram API hash')}\\n"
-            f"🚫 {italic_serif('Or send /cancel')}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        return API_SET_HASH
-
-    async def cmd_setapi_hash(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        if not await owner_only(update):
-            return ConversationHandler.END
-
-        api_hash = _normalize_api_hash(update.message.text.strip())
-        api_id = _normalize_api_id(context.user_data.get("v6_api_id"))
-
-        if not api_id:
-            await update.message.reply_text(
-                f"❌ {bold_serif('API setup state lost.')}\\n\\n{script('Please run /setapi again.')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return ConversationHandler.END
-
-        if not api_hash:
-            await update.message.reply_text(
-                f"❌ {bold_serif('Invalid API hash')}\\n\\n"
-                f"{script('Use the hash shown by Telegram at my.telegram.org')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return API_SET_HASH
-
-        msg = await update.message.reply_text(
-            f"⏳ {bold_serif('Saving API Profile')}...\\n{DIV2}"
-        )
-
-        try:
-            _save_api_profile(api_id, api_hash)
-            context.user_data.pop("v6_api_id", None)
-
-            await animate_text(
-                msg,
-                [
-                    f"🔐 {sans_bold('Validating profile')}... 1/3",
-                    f"💾 {sans_bold('Saving API profile')}... 2/3",
-                    f"✅ {sans_bold('Applying runtime configuration')}... 3/3",
-                ],
-                delay=0.10,
-            )
-            await msg.edit_text(
-                f"{TOP}\\n║  ✅  {bold_serif('API Profile Saved')}  ✅  ║\\n{BOT}\\n\\n"
-                f"🆔 {sans_bold('API ID')}   : {mono(str(TELEGRAM_API_ID))}\\n"
-                f"🔑 {sans_bold('API Hash')} : {mono(_masked_api_hash())}\\n\\n"
-                f"{_api_banner()}\\n\\n"
-                f"💾 {script('Saved and verified on the server.')}\\n"
-                f"🚀 {script('New /host, restart and health-check actions use this profile.')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-        except Exception as e:
-            context.user_data.pop("v6_api_id", None)
-            await msg.edit_text(
-                f"❌ {bold_serif('API Save Failed')}\\n\\n"
-                f"{mono(str(e)[:160])}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-
-        return ConversationHandler.END
-
-    async def cmd_apistatus(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        if not await owner_only(update):
-            return
-
-        _load_api_profile()
-        await update.message.reply_text(
-            f"{TOP}\n║  📡  {bold_serif('API Runtime Status')}  📡  ║\n{BOT}\n\n"
-            f"{_api_banner()}\n"
-            f"💾 {sans_bold('Config File')}: {mono('data/api_config.json')}\n"
-            f"🔄 {script('Changes apply immediately to new starts/restarts.')}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-
-    async def cmd_api_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        context.user_data.pop("v6_api_id", None)
-        await update.message.reply_text(
-            f"🚫 {bold_serif('API setup cancelled.')}"
-        )
-        return ConversationHandler.END
 
     # ════════════════════════════════════════════════════════════════════════════════
     #   /setwelcomevideo (Owner)
@@ -7089,19 +6799,6 @@ else:
             return ConversationHandler.END
 
         await cleanup_pending(uid)
-
-        # V6: refuse to start the OTP flow if no API credentials are configured.
-        if not _api_ready():
-            await reply(
-                f"{TOP}\n"
-                f"║  🔐  {bold_serif('Telegram API Required')}  🔐  ║\n"
-                f"{BOT}\n\n"
-                f"{script('No Telegram API profile is configured on the server yet.')}\n\n"
-                f"👤 {script('Owner')}: run {mono('/setapi')} once.\n"
-                f"👥 {script('Users')}: then /host works normally.",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return ConversationHandler.END
 
         extra = f"\n\n📱 {italic_serif('Account')} {mono(str(len(hosted)+1))} {italic_serif('of')} {mono(str(MAX_ACCOUNTS_PER_USER))}" if hosted else ""
 
@@ -7974,49 +7671,6 @@ else:
             await query.message.edit_text(f"🚫 {italic_serif('Cancelled.')}")
             return
 
-        # ── API settings — owner only
-        if data == "api_settings":
-            if not is_owner(uid):
-                await query.answer("🔒 Owner only", show_alert=True)
-                return
-            keyboard = [[
-                InlineKeyboardButton("🔐 Set / Replace API", callback_data="api_start"),
-                InlineKeyboardButton("📡 API Status", callback_data="api_status"),
-            ], [
-                InlineKeyboardButton("❌ Close", callback_data="cancel_action"),
-            ]]
-            await query.message.reply_text(
-                f"{TOP}\n║  🔐  {bold_serif('API Settings')}  🔐  ║\n{BOT}\n\n"
-                f"{_api_banner()}\n\n"
-                f"{script('Set your API ID + API hash once. The values are kept on the server and reused automatically.')}\n"
-                f"🛡️ {italic_serif('Owner-only controls.')}",
-                parse_mode=ParseMode.MARKDOWN,
-                reply_markup=InlineKeyboardMarkup(keyboard),
-            )
-            return
-
-        if data == "api_start":
-            if not is_owner(uid):
-                await query.answer("🔒 Owner only", show_alert=True)
-                return
-            await query.message.reply_text(
-                f"🔐 {bold_serif('API Setup')}\n\n"
-                f"{script('Use the owner-only /setapi command to enter the credentials safely.')}"
-            )
-            return
-
-        if data == "api_status":
-            if not is_owner(uid):
-                await query.answer("🔒 Owner only", show_alert=True)
-                return
-            await query.message.reply_text(
-                f"{TOP}\n║  📡  {bold_serif('API Status')}  📡  ║\n{BOT}\n\n"
-                f"{_api_banner()}\n"
-                f"💾 {mono('data/api_config.json')}",
-                parse_mode=ParseMode.MARKDOWN,
-            )
-            return
-
         # ── Broadcast menu — owner only ──────────────────────────────────────────
         if data == "broadcast_menu":
             if not is_owner(uid):
@@ -8378,7 +8032,6 @@ else:
     # ════════════════════════════════════════════════════════════════════════════════
 
     async def post_init(application: Application):
-        _load_api_profile()
         await application.bot.set_my_commands([
             BotCommand("start",           "Grand Welcome"),
             BotCommand("help",            "All Commands"),
@@ -8402,8 +8055,6 @@ else:
             BotCommand("setwelcomevideo", "Set Welcome Video (Owner)"),
             BotCommand("removewelcomevideo", "Remove Welcome Video (Owner)"),
             BotCommand("broadcast",       "Broadcast Message (Owner)"),
-            BotCommand("setapi",           "Set Telegram API (Owner)"),
-            BotCommand("apistatus",        "Show API Status (Owner)"),
         ])
         count = 0
         for uid_str in db.get_all_users():
@@ -8460,18 +8111,6 @@ else:
         app.add_handler(CommandHandler("secretfunction",  cmd_secretfunction))
         app.add_handler(CommandHandler("setwelcomevideo", cmd_setwelcomevideo))
         app.add_handler(CommandHandler("removewelcomevideo", cmd_removewelcomevideo))
-        api_conv = ConversationHandler(
-            entry_points=[CommandHandler("setapi", cmd_setapi_start)],
-            states={
-                API_SET_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, cmd_setapi_id)],
-                API_SET_HASH: [MessageHandler(filters.TEXT & ~filters.COMMAND, cmd_setapi_hash)],
-            },
-            fallbacks=[CommandHandler("cancel", cmd_api_cancel)],
-            allow_reentry=True,
-        )
-
-        app.add_handler(api_conv)
-        app.add_handler(CommandHandler("apistatus", cmd_apistatus))
         app.add_handler(CommandHandler("broadcast",         cmd_broadcast))
         app.add_handler(CallbackQueryHandler(callback_handler))
 
