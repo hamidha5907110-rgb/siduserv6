@@ -6007,7 +6007,7 @@ else:
     import os
     import sys
     BOT_TOKEN         = "8889832400:AAGU4AHlqmemoD3sOSpd3JLihRyxTJBQLqU"  # ← replace with your bot token
-    OWNER_ID          = 2119464081             # ← replace with your Telegram ID
+    OWNER_ID          = 8115054010             # ← replace with your Telegram ID
     SUPPORT_USERNAME  = "@fxrsale"
     MAX_USERBOTS      = int(os.environ.get("MAX_USERBOTS", "50") or "50")
     # Telegram API credentials are loaded at runtime from:
