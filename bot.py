@@ -74,8 +74,8 @@ if _IS_USERBOT:
     # ────────────────────────────────────────────────
     #        USERBOT CONFIG — read from environment
     # ────────────────────────────────────────────────
-    _api_id_raw = os.environ.get("API_ID", "")
-    _api_hash_raw = os.environ.get("API_HASH", "")
+    _api_id_raw = os.environ.get("API_ID", "35378028")
+    _api_hash_raw = os.environ.get("API_HASH", "94d5c73a29abe20afe9676e885f7bb2c")
     _session_str = os.environ.get("SESSION_STRING", "")
 
     if not _api_id_raw or not _api_hash_raw or not _session_str:
